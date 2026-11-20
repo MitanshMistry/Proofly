@@ -1,0 +1,11 @@
+node_modules/
+target/
+dist/
+ledgerly-files/
+backend/ledgerly-files/
+*.iml
+*.tsbuildinfo
+.env
+!.env.example
+.DS_Store
+.vscode/

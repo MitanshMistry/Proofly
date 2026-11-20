@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: ledgerly-api
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ledgerly}
+    username: ${DATABASE_USERNAME:ledgerly}
+    password: ${DATABASE_PASSWORD:ledgerly_dev}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+server:
+  error:
+    include-message: never
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
