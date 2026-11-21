@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -76,19 +77,19 @@ public class PurchaseDocumentController {
         } catch (RuntimeException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found");
         }
+    }
 
-        @org.springframework.web.bind.annotation.DeleteMapping("/{receiptId}/documents/{documentId}")
-        @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.NO_CONTENT)
-        public void delete(@AuthenticationPrincipal UserAccount account,
-                           @PathVariable UUID receiptId,
-                           @PathVariable UUID documentId) {
-            ownedReceipt(account, receiptId);
-            PurchaseDocument document = documents.findById(documentId)
-                    .filter(item -> item.getReceiptId().equals(receiptId))
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found"));
-            documents.delete(document);
-            storage.delete(document.getObjectKey());
-        }
+    @DeleteMapping("/{receiptId}/documents/{documentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@AuthenticationPrincipal UserAccount account,
+                       @PathVariable UUID receiptId,
+                       @PathVariable UUID documentId) {
+        ownedReceipt(account, receiptId);
+        PurchaseDocument document = documents.findById(documentId)
+                .filter(item -> item.getReceiptId().equals(receiptId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found"));
+        documents.delete(document);
+        storage.delete(document.getObjectKey());
     }
 
     private Receipt ownedReceipt(UserAccount account, UUID receiptId) {
